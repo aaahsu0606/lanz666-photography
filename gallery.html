@@ -177,21 +177,6 @@ section{padding:6rem 4rem;}
 .fi4{animation:fadeUp 0.9s 0.45s ease both;}
 </style>
 <style>
-.loading-screen {
-  text-align:center; padding:5rem 2rem;
-  font-family:'Special Elite',monospace;
-  font-size:0.65rem; letter-spacing:0.4em; color:var(--tan);
-}
-.loading-dots::after {
-  content:''; animation:dots 1.5s infinite;
-}
-@keyframes dots {
-  0%{content:'';} 33%{content:'.';} 66%{content:'..';} 100%{content:'...';}
-}
-.empty-state {
-  text-align:center; padding:5rem 2rem; color:var(--faded);
-  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem;
-}
 .dynamic-card {
   break-inside:avoid; margin-bottom:1.2rem;
   overflow:hidden; cursor:zoom-in; position:relative;
@@ -203,10 +188,7 @@ section{padding:6rem 4rem;}
   filter:sepia(0.08) contrast(1.04);
   transition:transform 0.4s, filter 0.4s;
 }
-.dynamic-card:hover img {
-  filter:sepia(0) contrast(1.08);
-  transform:scale(1.02);
-}
+.dynamic-card:hover img { filter:sepia(0) contrast(1.08); transform:scale(1.02); }
 .card-overlay {
   position:absolute; bottom:0; left:0; right:0;
   background:linear-gradient(to top, rgba(26,18,8,0.85), transparent);
@@ -216,31 +198,27 @@ section{padding:6rem 4rem;}
   opacity:0; transition:opacity 0.3s;
 }
 .dynamic-card:hover .card-overlay { opacity:1; }
-.series-badge {
-  display:inline-block;
-  font-family:'Special Elite',monospace;
-  font-size:0.58rem; letter-spacing:0.2em;
-  color:var(--tan); border:1px solid rgba(184,154,114,0.25);
-  padding:0.25rem 0.6rem; margin:0.3rem 0.2rem 0 0;
-  cursor:pointer; transition:all 0.25s;
+.tab-btn {
+  font-family:'Special Elite',monospace; font-size:0.68rem; letter-spacing:0.2em;
+  padding:0.6rem 1.3rem; border:none; background:transparent;
+  color:var(--faded); cursor:crosshair; border-right:1px solid var(--border);
+  transition:all 0.25s;
 }
-.series-badge:hover, .series-badge.active {
-  background:var(--dark); color:var(--cream); border-color:var(--tan);
-}
-.sub-series-row {
-  display:none; flex-wrap:wrap; gap:0; margin-bottom:1.5rem;
-  border:1px solid var(--border); width:fit-content;
-}
-.sub-series-row.visible { display:flex; }
-.sub-tab {
+.tab-btn:last-child { border-right:none; }
+.tab-btn:hover { color:var(--dark); }
+.tab-btn.active { background:var(--dark); color:var(--cream); }
+.sub-tab-btn {
   font-family:'Special Elite',monospace; font-size:0.65rem; letter-spacing:0.2em;
-  padding:0.5rem 1.2rem; border:none; background:transparent;
-  color:var(--faded); cursor:crosshair; transition:all 0.25s;
-  border-right:1px solid var(--border);
+  padding:0.5rem 1.1rem; border:none; background:transparent;
+  color:var(--faded); cursor:crosshair; border-right:1px solid var(--border);
+  transition:all 0.25s;
 }
-.sub-tab:last-child { border-right:none; }
-.sub-tab:hover { color:var(--dark); background:rgba(61,43,31,0.05); }
-.sub-tab.active { background:var(--warm); color:var(--cream); }
+.sub-tab-btn:last-child { border-right:none; }
+.sub-tab-btn.active { background:var(--warm); color:var(--cream); }
+.empty-state {
+  text-align:center; padding:5rem 2rem; color:var(--faded);
+  font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.1rem;
+}
 </style>
 </head>
 <body>
@@ -256,36 +234,31 @@ section{padding:6rem 4rem;}
 
 <div style="padding-top:80px;"></div>
 <section style="padding:4rem 4rem 2rem; border-bottom:1px solid var(--border);">
-  <span class="sec-eyebrow" style="font-family:'Special Elite',monospace;font-size:0.62rem;letter-spacing:0.5em;color:var(--tan);display:block;margin-bottom:1rem;text-align:center;">PORTFOLIO</span>
+  <span style="font-family:'Special Elite',monospace;font-size:0.62rem;letter-spacing:0.5em;color:var(--tan);display:block;margin-bottom:1rem;text-align:center;">PORTFOLIO</span>
   <h1 style="font-family:'Cormorant Garamond',serif;font-size:2.8rem;font-weight:300;text-align:center;color:var(--dark);margin-bottom:0.5rem;"><em style="font-style:italic;color:var(--tan);">作品集</em></h1>
-  <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--faded);text-align:center;margin-bottom:3.5rem;">每一張照片，都是時間留下的痕跡</p>
+  <p style="font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1rem;color:var(--faded);text-align:center;margin-bottom:2rem;">每一張照片，都是時間留下的痕跡</p>
   <div style="width:60px;height:1px;background:var(--tan);margin:0 auto;"></div>
 </section>
 
 <section style="padding:3rem 4rem;">
-
   <!-- 主分類 -->
-  <div style="display:flex;gap:0;border:1px solid var(--border);width:fit-content;margin-bottom:1.5rem;" id="main-tabs">
-    <button class="ptab active" onclick="filterMain('all',this)" style="font-family:'Special Elite',monospace;font-size:0.68rem;letter-spacing:0.2em;padding:0.6rem 1.3rem;border:none;background:var(--dark);color:var(--cream);cursor:crosshair;border-right:1px solid var(--border);">全部</button>
-    <button class="ptab" onclick="filterMain('wedding',this)" style="font-family:'Special Elite',monospace;font-size:0.68rem;letter-spacing:0.2em;padding:0.6rem 1.3rem;border:none;background:transparent;color:var(--faded);cursor:crosshair;border-right:1px solid var(--border);transition:all 0.25s;">婚禮</button>
-    <button class="ptab" onclick="filterMain('event',this)" style="font-family:'Special Elite',monospace;font-size:0.68rem;letter-spacing:0.2em;padding:0.6rem 1.3rem;border:none;background:transparent;color:var(--faded);cursor:crosshair;border-right:1px solid var(--border);transition:all 0.25s;">活動</button>
-    <button class="ptab" onclick="filterMain('baby',this)" style="font-family:'Special Elite',monospace;font-size:0.68rem;letter-spacing:0.2em;padding:0.6rem 1.3rem;border:none;background:transparent;color:var(--faded);cursor:crosshair;border-right:1px solid var(--border);transition:all 0.25s;">抓周</button>
-    <button class="ptab" onclick="filterMain('portrait',this)" style="font-family:'Special Elite',monospace;font-size:0.68rem;letter-spacing:0.2em;padding:0.6rem 1.3rem;border:none;background:transparent;color:var(--faded);cursor:crosshair;transition:all 0.25s;">個人寫真</button>
+  <div style="display:flex;border:1px solid var(--border);width:fit-content;margin-bottom:1.5rem;" id="main-tabs">
+    <button class="tab-btn active" onclick="filterMain('all',this)">全部</button>
+    <button class="tab-btn" onclick="filterMain('wedding',this)">婚禮</button>
+    <button class="tab-btn" onclick="filterMain('event',this)">活動</button>
+    <button class="tab-btn" onclick="filterMain('baby',this)">抓周</button>
+    <button class="tab-btn" onclick="filterMain('portrait',this)">個人寫真</button>
   </div>
 
-  <!-- 子系列（個人寫真時顯示） -->
-  <div class="sub-series-row" id="sub-series-row">
-    <button class="sub-tab active" onclick="filterSub('all',this)">全部作品</button>
+  <!-- 子系列 -->
+  <div id="sub-tabs" style="display:none; margin-bottom:1.5rem;">
+    <div style="font-family:'Special Elite',monospace;font-size:0.58rem;letter-spacing:0.35em;color:var(--tan);margin-bottom:0.6rem;">作品系列</div>
+    <div style="display:flex;border:1px solid var(--border);width:fit-content;" id="sub-tabs-inner"></div>
   </div>
 
-  <!-- 作品數量 -->
   <div style="font-family:'Special Elite',monospace;font-size:0.65rem;letter-spacing:0.3em;color:var(--tan);margin-bottom:2rem;" id="photo-count"></div>
 
-  <!-- 照片格子 -->
-  <div style="columns:3;column-gap:1.2rem;" id="photo-grid">
-
-  </div>
-
+  <div style="columns:3;column-gap:1.2rem;" id="photo-grid"></div>
 </section>
 
 <!-- Lightbox -->
@@ -311,157 +284,112 @@ section{padding:6rem 4rem;}
 </footer>
 
 <script>
-const CLOUD_NAME = 'dnsvfpj6m';
-const STORAGE_KEY = 'lanz666_portfolio';
+// ── 作品資料庫 ──
+// 每次上傳新作品後，把照片網址加到這裡
+const PORTFOLIO = [
+  {
+    series:'測試',
+    category:'wedding',
+    location:'高雄',
+    photos:[
+    'https://res.cloudinary.com/dnsvfpj6m/image/upload/v1778075601/jqeefcgdqtx43zdcqvrl.jpg',
+    'https://res.cloudinary.com/dnsvfpj6m/image/upload/v1778075601/u7qalfdt2utvmewwn1yu.jpg',
+    'https://res.cloudinary.com/dnsvfpj6m/image/upload/v1778075601/e6fibjcqqe2issirsi1k.jpg',
+    'https://res.cloudinary.com/dnsvfpj6m/image/upload/v1778075601/bidehdidamoxow0nhxpb.jpg',
+    'https://res.cloudinary.com/dnsvfpj6m/image/upload/v1778075601/we1eo92pukfwxkcgvwgy.jpg',
+    'https://res.cloudinary.com/dnsvfpj6m/image/upload/v1778075602/yynaqkq6ojnoiuqrwxqv.jpg',
+    'https://res.cloudinary.com/dnsvfpj6m/image/upload/v1778075601/mgxcdbgi7qqyx7crnzts.jpg',
+    'https://res.cloudinary.com/dnsvfpj6m/image/upload/v1778075603/suhem6uckwhyyg9rlfkz.jpg',
+    'https://res.cloudinary.com/dnsvfpj6m/image/upload/v1778075603/cfrrt8oeklwn39jv0jrn.jpg'
+    ]
+  },
+];
 
+// ── 以下為自動邏輯，不需要修改 ──
 let allPhotos = [];
 let currentCat = 'all';
 let currentSub = 'all';
 let lbPhotos = [], lbIdx = 0;
 
-const catMap = { portrait:'個人寫真', wedding:'婚禮', event:'活動', baby:'抓周' };
-
-function loadFromStorage() {
-  const raw = localStorage.getItem(STORAGE_KEY);
-  if (!raw) return [];
-  try { return JSON.parse(raw); } catch(e) { return []; }
-}
-
-function buildPhotoList(series) {
-  const photos = [];
-  series.forEach(function(s) {
-    if (!s.photos) return;
-    s.photos.forEach(function(p) {
-      if (!p) return;
-      photos.push({
-        url: p.url,
-        category: s.category,
-        series: s.name,
-        date: s.date,
-        location: s.location
-      });
+function buildPhotos() {
+  allPhotos = [];
+  PORTFOLIO.forEach(function(s) {
+    (s.photos || []).forEach(function(url) {
+      allPhotos.push({ url:url, category:s.category, series:s.series, location:s.location||'' });
     });
   });
-  return photos;
 }
 
-function buildSubTabs(series) {
-  const subRow = document.getElementById('sub-series-row');
-  const portraitSeries = series.filter(function(s){ return s.category === 'portrait'; });
-  
-  subRow.innerHTML = '<button class="sub-tab active" onclick="filterSub('all',this)">全部作品</button>';
-  
+function buildSubTabs() {
+  const inner = document.getElementById('sub-tabs-inner');
+  const portraitSeries = PORTFOLIO.filter(function(s){ return s.category==='portrait'; });
+  let html = '<button class="sub-tab-btn active" onclick="filterSub('all',this)">全部作品</button>';
   portraitSeries.forEach(function(s) {
-    const btn = document.createElement('button');
-    btn.className = 'sub-tab';
-    btn.textContent = s.name;
-    btn.onclick = function() { filterSub(s.name, this); };
-    subRow.appendChild(btn);
+    html += '<button class="sub-tab-btn" onclick="filterSub('' + s.series.replace(/'/g,"\'") + '',this)">' + s.series + '</button>';
   });
+  inner.innerHTML = html;
 }
 
 function renderPhotos(photos) {
   const grid = document.getElementById('photo-grid');
   const count = document.getElementById('photo-count');
-  
-  if (photos.length === 0) {
-    grid.innerHTML = '<div class="empty-state">此分類暫無作品，請透過上傳後台新增。</div>';
-    count.textContent = '0 張作品';
+  lbPhotos = photos;
+  if (!photos.length) {
+    grid.innerHTML = '<div class="empty-state">此分類暫無作品。</div>';
+    count.textContent = '';
     return;
   }
-
   count.textContent = photos.length + ' 張作品';
-  lbPhotos = photos;
-
-  grid.innerHTML = photos.map(function(p, i) {
-    const label = p.series + (p.location ? ' · ' + p.location : '');
+  grid.innerHTML = photos.map(function(p,i) {
     return '<div class="dynamic-card" onclick="openLb(' + i + ')">' +
       '<img src="' + p.url + '" alt="' + p.series + '" loading="lazy">' +
-      '<div class="card-overlay">' + label + '</div>' +
+      '<div class="card-overlay">' + p.series + (p.location?' · '+p.location:'') + '</div>' +
       '</div>';
   }).join('');
 }
 
 function filterMain(cat, btn) {
-  currentCat = cat;
-  currentSub = 'all';
-  
-  document.querySelectorAll('#main-tabs button').forEach(function(b) {
-    b.style.background = 'transparent';
-    b.style.color = 'var(--faded)';
-  });
-  btn.style.background = 'var(--dark)';
-  btn.style.color = 'var(--cream)';
-
-  const subRow = document.getElementById('sub-series-row');
+  currentCat = cat; currentSub = 'all';
+  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  var subEl = document.getElementById('sub-tabs');
   if (cat === 'portrait') {
-    subRow.classList.add('visible');
-    document.querySelectorAll('.sub-tab').forEach(function(t,i){ t.classList.toggle('active',i===0); });
+    subEl.style.display = 'block';
+    document.querySelectorAll('.sub-tab-btn').forEach(function(b,i){ b.classList.toggle('active',i===0); });
   } else {
-    subRow.classList.remove('visible');
+    subEl.style.display = 'none';
   }
-
   applyFilter();
 }
 
 function filterSub(sub, btn) {
   currentSub = sub;
-  document.querySelectorAll('.sub-tab').forEach(function(t){ t.classList.remove('active'); });
+  document.querySelectorAll('.sub-tab-btn').forEach(function(b){ b.classList.remove('active'); });
   btn.classList.add('active');
   applyFilter();
 }
 
 function applyFilter() {
-  let filtered = allPhotos;
-  if (currentCat !== 'all') {
-    filtered = filtered.filter(function(p){ return p.category === currentCat; });
-  }
-  if (currentSub !== 'all') {
-    filtered = filtered.filter(function(p){ return p.series === currentSub; });
-  }
+  var filtered = allPhotos.filter(function(p) {
+    var catOk = currentCat==='all' || p.category===currentCat;
+    var subOk = currentSub==='all' || p.series===currentSub;
+    return catOk && subOk;
+  });
   renderPhotos(filtered);
 }
 
-function openLb(idx) {
-  lbIdx = idx;
-  showLb();
-  document.getElementById('lb-overlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
-function showLb() {
-  if (!lbPhotos.length) return;
-  document.getElementById('lb-img').src = lbPhotos[lbIdx].url;
-  document.getElementById('lb-caption').textContent = lbPhotos[lbIdx].series || '';
-  document.getElementById('lb-counter').textContent = (lbIdx+1) + ' / ' + lbPhotos.length;
-}
-function lbNav(dir) { lbIdx = (lbIdx+dir+lbPhotos.length)%lbPhotos.length; showLb(); }
+function openLb(idx) { lbIdx=idx; showLb(); document.getElementById('lb-overlay').classList.add('open'); document.body.style.overflow='hidden'; }
+function showLb() { if(!lbPhotos.length)return; document.getElementById('lb-img').src=lbPhotos[lbIdx].url; document.getElementById('lb-caption').textContent=lbPhotos[lbIdx].series||''; document.getElementById('lb-counter').textContent=(lbIdx+1)+' / '+lbPhotos.length; }
+function lbNav(dir) { lbIdx=(lbIdx+dir+lbPhotos.length)%lbPhotos.length; showLb(); }
 function closeLb() { document.getElementById('lb-overlay').classList.remove('open'); document.body.style.overflow=''; }
-function lbClose(e) { if(e.target===document.getElementById('lb-overlay')) closeLb(); }
-document.addEventListener('keydown',function(e){
-  var o=document.getElementById('lb-overlay');
-  if(!o||!o.classList.contains('open')) return;
-  if(e.key==='ArrowLeft') lbNav(-1);
-  if(e.key==='ArrowRight') lbNav(1);
-  if(e.key==='Escape') closeLb();
-});
+function lbClose(e) { if(e.target===document.getElementById('lb-overlay'))closeLb(); }
+document.addEventListener('keydown',function(e){ var o=document.getElementById('lb-overlay'); if(!o||!o.classList.contains('open'))return; if(e.key==='ArrowLeft')lbNav(-1); if(e.key==='ArrowRight')lbNav(1); if(e.key==='Escape')closeLb(); });
 
-// 初始化
-(function init() {
-  const series = loadFromStorage();
-  allPhotos = buildPhotoList(series);
-  buildSubTabs(series);
-  renderPhotos(allPhotos);
-})();
+buildPhotos();
+buildSubTabs();
+renderPhotos(allPhotos);
 
-if (window.netlifyIdentity) {
-  window.netlifyIdentity.on("init", function(user) {
-    if (!user) {
-      window.netlifyIdentity.on("login", function() {
-        document.location.href = "/admin/";
-      });
-    }
-  });
-}
+if(window.netlifyIdentity){window.netlifyIdentity.on("init",function(user){if(!user){window.netlifyIdentity.on("login",function(){document.location.href="/admin/";});}});}
 </script>
 </body>
 </html>
