@@ -175,6 +175,7 @@ section{padding:6rem 4rem;}
 .fi3{animation:fadeUp 0.9s 0.3s ease both;}
 .fi4{animation:fadeUp 0.9s 0.45s ease both;}
 </style>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
 </head>
 <body>
 <header>
@@ -272,6 +273,17 @@ function lbNav(dir){lbIdx=(lbIdx+dir+lbPhotos.length)%lbPhotos.length;showLb();}
 function closeLb(){document.getElementById('lb-overlay').classList.remove('open');document.body.style.overflow='';}
 function lbClose(e){if(e.target===document.getElementById('lb-overlay'))closeLb();}
 document.addEventListener('keydown',function(e){var o=document.getElementById('lb-overlay');if(!o||!o.classList.contains('open'))return;if(e.key==='ArrowLeft')lbNav(-1);if(e.key==='ArrowRight')lbNav(1);if(e.key==='Escape')closeLb();});
+</script>
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", function(user) {
+      if (!user) {
+        window.netlifyIdentity.on("login", function() {
+          document.location.href = "/admin/";
+        });
+      }
+    });
+  }
 </script>
 </body>
 </html>
