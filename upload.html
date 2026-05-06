@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>藍六六 — 作品上傳後台</title>
+<script src="https://upload-widget.cloudinary.com/global/all.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#1a1208; color:#f5f0e8; font-family:'Noto Serif TC',serif; min-height:100vh; padding:2rem; }
+
+.header { text-align:center; padding:2rem 0 3rem; border-bottom:1px solid rgba(184,154,114,0.2); margin-bottom:3rem; }
+.header h1 { font-family:'Special Elite',monospace; font-size:1.5rem; letter-spacing:0.2em; color:#b89a72; margin-bottom:0.5rem; }
+.header p { font-size:0.85rem; color:rgba(245,240,232,0.4); font-style:italic; letter-spacing:0.1em; }
+
+.container { max-width:800px; margin:0 auto; }
+
+.section { background:rgba(245,240,232,0.04); border:1px solid rgba(184,154,114,0.15); padding:2rem; margin-bottom:2rem; }
+.section-title { font-family:'Special Elite',monospace; font-size:0.7rem; letter-spacing:0.4em; color:#b89a72; margin-bottom:1.5rem; text-transform:uppercase; }
+
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin-bottom:1.2rem; }
+.form-field { margin-bottom:1.2rem; }
+.form-field label { display:block; font-family:'Special Elite',monospace; font-size:0.6rem; letter-spacing:0.3em; color:#b89a72; margin-bottom:0.5rem; }
+.form-field input, .form-field select, .form-field textarea {
+  width:100%; background:transparent; border:none; border-bottom:1px solid rgba(184,154,114,0.3);
+  padding:0.6rem 0; color:#f5f0e8; font-family:'Noto Serif TC',serif; font-size:0.9rem;
+  outline:none; transition:border-color 0.3s; -webkit-appearance:none;
+}
+.form-field input:focus, .form-field select:focus, .form-field textarea:focus { border-bottom-color:#b89a72; }
+.form-field select option { background:#1a1208; }
+.form-field textarea { resize:vertical; height:80px; }
+
+.upload-zone {
+  border:2px dashed rgba(184,154,114,0.3); padding:3rem 2rem; text-align:center;
+  cursor:pointer; transition:all 0.3s; margin-bottom:1.5rem;
+}
+.upload-zone:hover { border-color:#b89a72; background:rgba(184,154,114,0.05); }
+.upload-icon { font-size:2.5rem; margin-bottom:1rem; opacity:0.5; }
+.upload-zone h3 { font-family:'Special Elite',monospace; font-size:0.75rem; letter-spacing:0.3em; color:#b89a72; margin-bottom:0.5rem; }
+.upload-zone p { font-size:0.8rem; color:rgba(245,240,232,0.35); font-style:italic; }
+
+.photo-preview { display:grid; grid-template-columns:repeat(auto-fill, minmax(120px,1fr)); gap:0.8rem; margin-top:1.5rem; }
+.preview-item { position:relative; aspect-ratio:1; overflow:hidden; background:rgba(184,154,114,0.1); }
+.preview-item img { width:100%; height:100%; object-fit:cover; filter:sepia(0.1); }
+.preview-item .remove { position:absolute; top:4px; right:4px; background:rgba(26,18,8,0.8); color:#f5f0e8; border:none; width:22px; height:22px; border-radius:50%; cursor:pointer; font-size:0.7rem; display:flex; align-items:center; justify-content:center; }
+.preview-count { font-family:'Special Elite',monospace; font-size:0.62rem; letter-spacing:0.3em; color:#b89a72; margin-top:1rem; }
+
+.progress-bar { background:rgba(184,154,114,0.1); height:4px; border-radius:2px; margin-top:1rem; overflow:hidden; display:none; }
+.progress-fill { height:100%; background:#b89a72; transition:width 0.3s; width:0%; }
+
+.submit-btn {
+  width:100%; padding:1.2rem; background:#b89a72; color:#1a1208;
+  font-family:'Special Elite',monospace; font-size:0.75rem; letter-spacing:0.35em;
+  border:none; cursor:pointer; transition:all 0.3s; margin-top:1rem;
+}
+.submit-btn:hover { background:#d4bb99; }
+.submit-btn:disabled { opacity:0.4; cursor:not-allowed; }
+
+.status-msg { text-align:center; padding:1rem; font-family:'Special Elite',monospace; font-size:0.65rem; letter-spacing:0.2em; margin-top:1rem; display:none; }
+.status-msg.success { color:#7ab87a; border:1px solid rgba(122,184,122,0.3); }
+.status-msg.error { color:#e07a7a; border:1px solid rgba(224,122,122,0.3); }
+
+.history-section { margin-top:3rem; }
+.history-item { display:flex; align-items:center; gap:1rem; padding:1rem; border-bottom:1px solid rgba(184,154,114,0.1); }
+.history-thumb { width:60px; height:60px; object-fit:cover; filter:sepia(0.1); flex-shrink:0; }
+.history-info { flex:1; }
+.history-info .h-title { font-family:'Special Elite',monospace; font-size:0.65rem; letter-spacing:0.2em; color:#b89a72; }
+.history-info .h-meta { font-size:0.75rem; color:rgba(245,240,232,0.4); margin-top:0.3rem; font-style:italic; }
+.copy-btn { font-family:'Special Elite',monospace; font-size:0.55rem; letter-spacing:0.2em; padding:0.3rem 0.7rem; background:transparent; border:1px solid rgba(184,154,114,0.3); color:#b89a72; cursor:pointer; transition:all 0.3s; }
+.copy-btn:hover { background:rgba(184,154,114,0.1); }
+
+.empty-history { text-align:center; padding:3rem; font-style:italic; color:rgba(245,240,232,0.25); font-size:0.85rem; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>藍六六 · 作品上傳後台</h1>
+    <p>PHOTOGRAPHY PORTFOLIO MANAGER</p>
+  </div>
+
+  <!-- 上傳表單 -->
+  <div class="section">
+    <div class="section-title">新增作品系列</div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label>作品系列名稱</label>
+        <input type="text" id="seriesName" placeholder="例：泡泡 · 高雄果貿">
+      </div>
+      <div class="form-field">
+        <label>分類</label>
+        <select id="category">
+          <option value="portrait">個人寫真</option>
+          <option value="wedding">婚禮</option>
+          <option value="event">活動</option>
+          <option value="baby">抓周</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-field">
+        <label>拍攝日期</label>
+        <input type="date" id="shootDate">
+      </div>
+      <div class="form-field">
+        <label>拍攝地點</label>
+        <input type="text" id="location" placeholder="例：高雄、台北">
+      </div>
+    </div>
+
+    <div class="form-field">
+      <label>備註（選填）</label>
+      <textarea id="notes" placeholder="作品說明或備註…"></textarea>
+    </div>
+
+    <!-- 上傳區域 -->
+    <div class="upload-zone" id="uploadZone" onclick="openUploader()">
+      <div class="upload-icon">📷</div>
+      <h3>點擊或拖曳照片到此處</h3>
+      <p>支援一次選取多張 · JPG、PNG · 建議 2MB 以內</p>
+    </div>
+
+    <div class="progress-bar" id="progressBar">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div class="photo-preview" id="photoPreview"></div>
+    <div class="preview-count" id="previewCount"></div>
+
+    <button class="submit-btn" id="submitBtn" onclick="submitSeries()" disabled>
+      發布作品系列 →
+    </button>
+
+    <div class="status-msg" id="statusMsg"></div>
+  </div>
+
+  <!-- 已上傳紀錄 -->
+  <div class="section history-section">
+    <div class="section-title">已上傳作品紀錄</div>
+    <div id="historyList"></div>
+  </div>
+</div>
+
+<script>
+const CLOUD_NAME = 'dnsvfpj6m';
+const UPLOAD_PRESET = 'lanz666_portfolio';
+const API_KEY = '392879323395216';
+
+let uploadedPhotos = [];
+
+function openUploader() {
+  const widget = cloudinary.createUploadWidget({
+    cloudName: CLOUD_NAME,
+    uploadPreset: UPLOAD_PRESET,
+    multiple: true,
+    maxFiles: 50,
+    maxFileSize: 5000000,
+    sources: ['local', 'camera'],
+    language: 'zh_TW',
+    text: {
+      zh_TW: {
+        or: '或',
+        back: '返回',
+        advanced: '進階',
+        close: '關閉',
+        no_results: '無結果',
+        search_placeholder: '搜尋檔案',
+        about_uw: '關於上傳工具',
+        menu: { files: '我的檔案', camera: '相機' },
+        selection_counter: { selected: '已選擇' },
+        actions: { upload: '上傳', clear_all: '清除全部', log_out: '登出' },
+        local: {
+          browse: '瀏覽',
+          dd_title_single: '拖曳檔案到此處',
+          dd_title_multi: '拖曳檔案到此處',
+          drop_title_single: '放開以上傳',
+          drop_title_multiple: '放開以上傳',
+        }
+      }
+    },
+    styles: {
+      palette: {
+        window: '#1a1208',
+        windowBorder: '#b89a72',
+        tabIcon: '#b89a72',
+        menuIcons: '#d4bb99',
+        textDark: '#1a1208',
+        textLight: '#f5f0e8',
+        link: '#b89a72',
+        action: '#b89a72',
+        inactiveTabIcon: '#7a6a55',
+        error: '#e07a7a',
+        inProgress: '#b89a72',
+        complete: '#7ab87a',
+        sourceBg: '#3d2b1f'
+      }
+    }
+  }, (error, result) => {
+    if (!error && result && result.event === 'success') {
+      const info = result.info;
+      uploadedPhotos.push({
+        url: info.secure_url,
+        public_id: info.public_id,
+        width: info.width,
+        height: info.height
+      });
+      addPreview(info.secure_url, uploadedPhotos.length - 1);
+      updateCount();
+    }
+  });
+  widget.open();
+}
+
+function addPreview(url, idx) {
+  const preview = document.getElementById('photoPreview');
+  const div = document.createElement('div');
+  div.className = 'preview-item';
+  div.id = `preview-${idx}`;
+  div.innerHTML = `
+    <img src="${url}" alt="">
+    <button class="remove" onclick="removePhoto(${idx})">✕</button>
+  `;
+  preview.appendChild(div);
+  document.getElementById('submitBtn').disabled = false;
+}
+
+function removePhoto(idx) {
+  uploadedPhotos[idx] = null;
+  const el = document.getElementById(`preview-${idx}`);
+  if (el) el.remove();
+  updateCount();
+  const remaining = uploadedPhotos.filter(p => p !== null).length;
+  if (remaining === 0) document.getElementById('submitBtn').disabled = true;
+}
+
+function updateCount() {
+  const count = uploadedPhotos.filter(p => p !== null).length;
+  const el = document.getElementById('previewCount');
+  el.textContent = count > 0 ? `已選取 ${count} 張照片` : '';
+}
+
+function submitSeries() {
+  const name = document.getElementById('seriesName').value.trim();
+  const category = document.getElementById('category').value;
+  const date = document.getElementById('shootDate').value;
+  const location = document.getElementById('location').value.trim();
+  const notes = document.getElementById('notes').value.trim();
+  const photos = uploadedPhotos.filter(p => p !== null);
+
+  if (!name) { showStatus('請填寫作品系列名稱', 'error'); return; }
+  if (photos.length === 0) { showStatus('請先上傳照片', 'error'); return; }
+
+  const series = { name, category, date, location, notes, photos, createdAt: new Date().toISOString() };
+
+  // 儲存到 localStorage
+  const history = JSON.parse(localStorage.getItem('lanz666_portfolio') || '[]');
+  history.unshift(series);
+  localStorage.setItem('lanz666_portfolio', JSON.stringify(history));
+
+  showStatus(`✓ 作品系列「${name}」已儲存！共 ${photos.length} 張照片。`, 'success');
+  
+  // 重置表單
+  document.getElementById('seriesName').value = '';
+  document.getElementById('shootDate').value = '';
+  document.getElementById('location').value = '';
+  document.getElementById('notes').value = '';
+  document.getElementById('photoPreview').innerHTML = '';
+  document.getElementById('previewCount').textContent = '';
+  document.getElementById('submitBtn').disabled = true;
+  uploadedPhotos = [];
+
+  loadHistory();
+}
+
+function showStatus(msg, type) {
+  const el = document.getElementById('statusMsg');
+  el.textContent = msg;
+  el.className = `status-msg ${type}`;
+  el.style.display = 'block';
+  setTimeout(() => { el.style.display = 'none'; }, 5000);
+}
+
+function loadHistory() {
+  const history = JSON.parse(localStorage.getItem('lanz666_portfolio') || '[]');
+  const list = document.getElementById('historyList');
+
+  if (history.length === 0) {
+    list.innerHTML = '<div class="empty-history">尚無上傳紀錄</div>';
+    return;
+  }
+
+  const catMap = { portrait:'個人寫真', wedding:'婚禮', event:'活動', baby:'抓周' };
+
+  list.innerHTML = history.map((s, i) => `
+    <div class="history-item">
+      <img class="history-thumb" src="${s.photos[0]?.url || ''}" alt="">
+      <div class="history-info">
+        <div class="h-title">${s.name}</div>
+        <div class="h-meta">${catMap[s.category] || s.category} · ${s.photos.length} 張 · ${s.date || '未填日期'} · ${s.location || ''}</div>
+      </div>
+      <button class="copy-btn" onclick="copyUrls(${i})">複製圖片網址</button>
+    </div>
+  `).join('');
+}
+
+function copyUrls(idx) {
+  const history = JSON.parse(localStorage.getItem('lanz666_portfolio') || '[]');
+  const series = history[idx];
+  const urls = series.photos.map(p => p.url).join('\n');
+  navigator.clipboard.writeText(urls).then(() => {
+    alert(`已複製 ${series.photos.length} 張照片的網址！`);
+  });
+}
+
+// 初始化
+document.getElementById('shootDate').valueAsDate = new Date();
+loadHistory();
+</script>
+</body>
+</html>
