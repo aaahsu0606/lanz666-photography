@@ -13,10 +13,24 @@ collections:
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - { label: "作品名稱", name: "title", widget: "string" }
-      - { label: "分類", name: "category", widget: "select", options: ["婚禮", "活動", "抓周", "個人寫真"] }
-      - { label: "客戶名稱", name: "client", widget: "string", required: false }
+      - label: "分類"
+        name: "category"
+        widget: "select"
+        options:
+          - { label: "婚禮", value: "wedding" }
+          - { label: "活動", value: "event" }
+          - { label: "抓周", value: "baby" }
+          - { label: "個人寫真", value: "portrait" }
+      - { label: "客戶名稱 / 系列名稱", name: "client", widget: "string", required: false }
       - { label: "拍攝日期", name: "date", widget: "date" }
       - { label: "封面照片", name: "cover", widget: "image" }
-      - { label: "照片集", name: "photos", widget: "list", field: { label: "照片", name: "photo", widget: "image" } }
-      - { label: "描述", name: "description", widget: "text", required: false }
+      - label: "照片集（可一次選多張）"
+        name: "photos"
+        widget: "list"
+        allow_add: true
+        collapsed: false
+        fields:
+          - { label: "照片", name: "image", widget: "image" }
+          - { label: "說明（選填）", name: "caption", widget: "string", required: false }
+      - { label: "作品描述（選填）", name: "description", widget: "text", required: false }
       - { label: "發布", name: "published", widget: "boolean", default: true }
