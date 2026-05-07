@@ -216,16 +216,14 @@ section{padding:6rem 4rem;}
 
 <section style="padding:3rem 4rem;">
   <div class="filter-bar">
-    <button class="filter-btn active" onclick="filterCat('all',this)">全部</button>
-    <button class="filter-btn" onclick="filterCat('wedding',this)">婚禮</button>
+    <button class="filter-btn active" onclick="filterCat('wedding',this)">婚禮</button>
     <button class="filter-btn" onclick="filterCat('event',this)">活動</button>
     <button class="filter-btn" onclick="filterCat('baby',this)">抓周</button>
     <button class="filter-btn" onclick="filterCat('portrait',this)">個人寫真</button>
   </div>
 
   <div class="sub-bar" id="sub-bar">
-    <button class="sub-btn active" onclick="filterSub('all',this)">全部作品</button>
-    <button class="sub-btn" onclick="filterSub('paopao',this)">泡泡。果貿新村</button>
+    <button class="sub-btn active" onclick="filterSub('paopao',this)">泡泡。果貿新村</button>
     <button class="sub-btn" onclick="filterSub('eva',this)">EVA。果貿</button>
   </div>
 
@@ -502,10 +500,11 @@ function filterCat(cat, btn) {
   if (cat === 'portrait') {
     subBar.classList.add('visible');
     document.querySelectorAll('.sub-btn').forEach(function(b,i){b.classList.toggle('active',i===0);});
+    applyFilter('portrait', 'paopao');
   } else {
     subBar.classList.remove('visible');
+    applyFilter(cat, 'all');
   }
-  applyFilter(cat, 'all');
 }
 
 function filterSub(sub, btn) {
@@ -557,6 +556,13 @@ document.addEventListener('keydown',function(e){
 });
 
 if(window.netlifyIdentity){window.netlifyIdentity.on("init",function(u){if(!u)window.netlifyIdentity.on("login",function(){document.location.href="/admin/";});});}
+
+// 預設顯示婚禮分類
+(function(){
+  var firstBtn = document.querySelector('.filter-btn');
+  applyFilter('wedding', 'all');
+  document.getElementById('count').textContent = document.querySelectorAll('.photo-card[data-cat="wedding"]').length + ' 張作品';
+})();
 </script>
 </body>
 </html>
