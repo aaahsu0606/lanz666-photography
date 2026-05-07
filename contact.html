@@ -238,7 +238,31 @@ section{padding:6rem 4rem;}
             <option>其他</option>
           </select>
         </div>
-        <div class="form-field"><label>預計拍攝日期</label><input type="text" name="拍攝日期" placeholder="例：2025 年 6 月 15 日"></div>
+        <div class="form-field">
+          <label>預計拍攝日期</label>
+          <div style="display:flex;gap:0.5rem;">
+            <select name="拍攝年份" style="flex:2;" required>
+              <option value="">年</option>
+              <option>2025</option><option>2026</option><option>2027</option><option>2028</option>
+            </select>
+            <select name="拍攝月份" style="flex:2;" required>
+              <option value="">月</option>
+              <option>1 月</option><option>2 月</option><option>3 月</option><option>4 月</option>
+              <option>5 月</option><option>6 月</option><option>7 月</option><option>8 月</option>
+              <option>9 月</option><option>10 月</option><option>11 月</option><option>12 月</option>
+            </select>
+            <select name="拍攝日" style="flex:1.5;" required>
+              <option value="">日</option>
+              <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+              <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
+              <option>11</option><option>12</option><option>13</option><option>14</option><option>15</option>
+              <option>16</option><option>17</option><option>18</option><option>19</option><option>20</option>
+              <option>21</option><option>22</option><option>23</option><option>24</option><option>25</option>
+              <option>26</option><option>27</option><option>28</option><option>29</option><option>30</option>
+              <option>31</option>
+            </select>
+          </div>
+        </div>
       </div>
       <div class="form-field"><label>拍攝地點</label><input type="text" name="拍攝地點" placeholder="例：台北、桃園、或尚未決定"></div>
       <div class="form-field"><label>需求說明</label><textarea name="需求說明" placeholder="請描述您的拍攝需求、人數、特殊要求等，讓我能為您提供更準確的建議…"></textarea></div>
