@@ -217,15 +217,16 @@ section{padding:6rem 4rem;}
     </div>
 
     <div>
+      <form action="https://formspree.io/f/xkoyvwzj" method="POST">
       <div class="form-row">
-        <div class="form-field"><label>姓名</label><input type="text" placeholder="您的名字"></div>
-        <div class="form-field"><label>電話 / LINE ID</label><input type="text" placeholder="方便聯繫的方式"></div>
+        <div class="form-field"><label>姓名</label><input type="text" name="姓名" placeholder="您的名字" required></div>
+        <div class="form-field"><label>電話 / LINE ID</label><input type="text" name="電話LINE" placeholder="方便聯繫的方式" required></div>
       </div>
-      <div class="form-field"><label>電子信箱</label><input type="email" placeholder="your@email.com"></div>
+      <div class="form-field"><label>電子信箱</label><input type="email" name="email" placeholder="your@email.com" required></div>
       <div class="form-row">
         <div class="form-field">
           <label>服務類型</label>
-          <select>
+          <select name="服務類型" required>
             <option value="">請選擇...</option>
             <option>婚禮平面攝影</option>
             <option>婚禮動態錄影</option>
@@ -237,11 +238,12 @@ section{padding:6rem 4rem;}
             <option>其他</option>
           </select>
         </div>
-        <div class="form-field"><label>預計拍攝日期</label><input type="text" placeholder="例：2025 年 6 月 15 日"></div>
+        <div class="form-field"><label>預計拍攝日期</label><input type="text" name="拍攝日期" placeholder="例：2025 年 6 月 15 日"></div>
       </div>
-      <div class="form-field"><label>拍攝地點</label><input type="text" placeholder="例：台北、桃園、或尚未決定"></div>
-      <div class="form-field"><label>需求說明</label><textarea placeholder="請描述您的拍攝需求、人數、特殊要求等，讓我能為您提供更準確的建議…"></textarea></div>
-      <button class="submit-btn">SEND · 送出諮詢</button>
+      <div class="form-field"><label>拍攝地點</label><input type="text" name="拍攝地點" placeholder="例：台北、桃園、或尚未決定"></div>
+      <div class="form-field"><label>需求說明</label><textarea name="需求說明" placeholder="請描述您的拍攝需求、人數、特殊要求等，讓我能為您提供更準確的建議…"></textarea></div>
+      <button type="submit" class="submit-btn">SEND · 送出諮詢</button>
+      </form>
     </div>
   </div>
 </section>
